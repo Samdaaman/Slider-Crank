@@ -1,8 +1,10 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import DashboardPage from "./pages/DashboardPage";
 
 function App() {
+  return DashboardPage();
   return (
     <div className="App">
       <header className="App-header">
