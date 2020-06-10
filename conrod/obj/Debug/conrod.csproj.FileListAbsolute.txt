@@ -1,0 +1,15 @@
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\bin\Debug\conrod.exe.config
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\bin\Debug\conrod.exe
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\bin\Debug\conrod.pdb
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.csprojAssemblyReference.cache
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\Decks.g.cs
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\App.g.cs
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod_MarkupCompile.cache
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod_MarkupCompile.lref
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\Decks.baml
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.g.resources
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.Properties.Resources.resources
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.csproj.GenerateResource.cache
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.csproj.CoreCompileInputs.cache
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.exe
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.pdb

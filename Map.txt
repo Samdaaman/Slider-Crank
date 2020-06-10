@@ -1,0 +1,5 @@
+Cylinder - Spotify playlist and music downloader
+Conrod - C# Application which communicates via socket/http
+Crank_Pin - Proxy for the ardunio (to socket/http)
+Crank - Software running on ardunio/calculator
+Wheel - Simulator for the crank, written in react (emulates crank & crank-pin)
