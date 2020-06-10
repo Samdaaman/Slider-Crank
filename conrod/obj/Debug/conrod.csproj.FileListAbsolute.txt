@@ -13,3 +13,6 @@ C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.csproj.Genera
 C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.csproj.CoreCompileInputs.cache
 C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.exe
 C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.pdb
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.csproj.CopyComplete

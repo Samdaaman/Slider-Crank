@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Security;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,7 +21,7 @@ namespace conrod
     static class CrankService
     {
         const int PORT = 726;
-        static private Socket Listener { get
+        /*static private Socket Listener { get
             {
                 if (_listener == null)
                     throw new Exception("Socket has not been initialised yet");
@@ -33,51 +34,37 @@ namespace conrod
                 _listener = value;
             }
         }
-        static private Socket _listener;
+        static private Socket _listener;*/
 
         public static void Initialise()
         {
-            Listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            Listener.Bind(new IPEndPoint(IPAddress.Loopback, PORT));
-            Listener.Listen(1);
-            StartListening();
-        }
+            Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            listener.Bind(new IPEndPoint(IPAddress.Loopback, PORT));
+            listener.Listen(1);
+            Socket handler = listener.Accept();
+            String data = "";
 
-        private static void StartListening()
-        {
-            Listener.BeginAccept(new AsyncCallback(AcceptCallback), Listener);
-        }
-
-        private static void AcceptCallback(IAsyncResult asyncResult)
-        {
-            Socket client = ((Socket)asyncResult.AsyncState).EndAccept(asyncResult);
-            StateObject state = new StateObject();
-            state.clientSocket = client;
-            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
-        }
-
-        private static void ReadCallback(IAsyncResult asyncResult)
-        {
-            StateObject state = (StateObject)asyncResult.AsyncState;
-            Socket client = state.clientSocket;
-
-            int read = client.EndReceive(asyncResult);
-
-            if (read > 0)
+            while (true)
             {
-                state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, read));
-                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
-            }
-            else
-            {
-                if (state.sb.Length > 0)
+                byte[] bytes = new byte[1];
+                int bytesRecieved = handler.Receive(bytes);
+                data += Encoding.ASCII.GetString(bytes, 0, bytesRecieved);
+                if (data.IndexOf("\n") > -1)
                 {
-                    string content = state.sb.ToString();
-                    Console.WriteLine($"Read {content.Length} bytes from socket.\nData=({content})");
+                    string[] dataChunks = data.Split('\n');
+                    for (int i = 0; i < dataChunks.Length - 1; i++)
+                    {
+                        Command[] commands = Command.LoadCommands(dataChunks[i]);
+                        Console.WriteLine($"Loaded {commands.Length} commands");
+                    }
+                    data = dataChunks[dataChunks.Length - 1];
                 }
-                client.Close();
-                StartListening();
+                if (data.IndexOf("<EOF>") > -1)
+                    break;
             }
+            Console.WriteLine("Closed connection");
+            handler.Shutdown(SocketShutdown.Both);
+            handler.Close();
         }
     }
 }
