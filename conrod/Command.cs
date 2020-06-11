@@ -38,8 +38,8 @@ namespace conrod
 
     public class CommandStack: INotifyPropertyChanged
     {
-        private object _lockObject = new object();
-        private List<Command> _stack = new List<Command>();
+        private readonly object _lockObjectStack = new object();
+        private readonly List<Command> _stack = new List<Command>();
         public Command[] Stack { get => GetAll(); }
         private AutoResetEvent _newCommandsARE = new AutoResetEvent(false);
 
@@ -51,7 +51,7 @@ namespace conrod
 
         public void PushAll(Command[] commands)
         {
-            lock (_lockObject)
+            lock (_lockObjectStack)
             {
                 foreach (Command command in commands)
                     _stack.Add(command);
@@ -65,7 +65,7 @@ namespace conrod
 
         public void Push(Command command)
         {
-            lock (_lockObject)
+            lock (_lockObjectStack)
             {
                 _stack.Add(command);
                 OnStackModified();
@@ -76,7 +76,7 @@ namespace conrod
         public Command[] WaitAndPopAll()
         {
             _newCommandsARE.WaitOne();
-            lock (_lockObject)
+            lock (_lockObjectStack)
             {
                 Command[] commands = _stack.ToArray();
                 _stack.Clear();
@@ -87,7 +87,7 @@ namespace conrod
 
         private Command[] GetAll()
         {
-            lock (_lockObject)
+            lock (_lockObjectStack)
                 return _stack.ToArray();
         }
 

@@ -4,19 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:conrod"
-        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" x:Class="conrod.Decks"
+        x:Class="conrod.Decks"
         mc:Ignorable="d"
-        Title="Decks" Height="450" Width="800">
+        Title="Decks" Height="450" Width="800" d:DataContext="{d:DesignInstance {x:Type local:Decks}}">
     <Window.Resources>
         <local:StatusTextConverter x:Key="StatusTextConverter"/>
     </Window.Resources>
-    <Window.DataContext>
-        <local:DecksDataContext/>
-    </Window.DataContext>
     <Grid>
         <StatusBar HorizontalAlignment="Stretch" Height="30" Margin="0,0,0,0" VerticalAlignment="Bottom">
-            <StatusBarItem Height="30" VerticalAlignment="Bottom" DataContext="{Binding CurrentCrankService}">
-                <TextBlock Text="{Binding CurrentStatus, Converter={StaticResource StatusTextConverter}}"/>
+            <StatusBarItem Height="30" VerticalAlignment="Bottom">
+                <TextBlock Text="{Binding CurrentCrankService.CurrentStatus, Converter={StaticResource StatusTextConverter}}"/>
             </StatusBarItem>
         </StatusBar>
         <Button x:Name="ButtonInitialise" Content="Initialise" HorizontalAlignment="Left" Margin="34,24,0,0" VerticalAlignment="Top" Width="75" IsEnabled="{Binding CurrentCrankService.CanInitialise}" Click="ButtonInitialise_Click"/>

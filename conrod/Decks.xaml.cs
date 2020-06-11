@@ -18,37 +18,25 @@ namespace conrod
     /// Interaction logic for Decks.xaml
     /// </summary>
     public partial class Decks : Window
+
     {
-        private readonly CommandStack _commandStack;
-        private readonly CrankService _crankService;
-        private readonly MixerService _mixerService;
+        public CommandStack CurrentCommandStack { get; } = new CommandStack();
+        public CrankService CurrentCrankService { get; }
+        public MixerService CurrentMixerService { get; }
+
         public Decks()
         {
-            _commandStack = new CommandStack();
-            _crankService = new CrankService(_commandStack);
-            _mixerService = new MixerService(_commandStack);
-            DataContext = new DecksDataContext(_commandStack, _crankService, _mixerService);
             InitializeComponent();
+            CurrentCrankService = new CrankService(CurrentCommandStack);
+            CurrentMixerService = new MixerService(CurrentCommandStack);
+            DataContext = this;
         }
 
         private void ButtonInitialise_Click(object sender, RoutedEventArgs e)
         {
-            _crankService.Initialise();
-            Task.Run(() => _crankService.AcceptNewCommandsForever());
-            Task.Run(() => _mixerService.ProcessNewCommandsForever());
-        }
-    }
-
-    public class DecksDataContext
-    {
-        public CommandStack CurrentCommandStack;
-        public CrankService CurrentCrankService;
-        public MixerService CurrentMixerService;
-        public DecksDataContext(CommandStack commandStack, CrankService crankService, MixerService mixerService)
-        {
-            CurrentCommandStack = commandStack;
-            CurrentCrankService = crankService;
-            CurrentMixerService = mixerService;
+            CurrentCrankService.Initialise();
+            Task.Run(() => CurrentCrankService.AcceptNewCommandsForever());
+            Task.Run(() => CurrentMixerService.ProcessNewCommandsForever());
         }
     }
 }
