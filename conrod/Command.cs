@@ -1,15 +1,12 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+using System.ComponentModel;
+using System.Threading;
 
 namespace conrod
 {
-    class Command
+    public class Command
     {
         public string Location { get; private set; }
         public int Value { get; private set; }
@@ -36,6 +33,69 @@ namespace conrod
                 }
             }
             return commands.ToArray();
+        }
+    }
+
+    public class CommandStack: INotifyPropertyChanged
+    {
+        private object _lockObject = new object();
+        private List<Command> _stack = new List<Command>();
+        public Command[] Stack { get => GetAll(); }
+        private AutoResetEvent _newCommandsARE = new AutoResetEvent(false);
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnStackModified()
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Stack"));
+        }
+
+        public void PushAll(Command[] commands)
+        {
+            lock (_lockObject)
+            {
+                foreach (Command command in commands)
+                    _stack.Add(command);
+                if (commands.Length > 0)
+                {
+                    OnStackModified();
+                    _newCommandsARE.Set();
+                }
+            }
+        }
+
+        public void Push(Command command)
+        {
+            lock (_lockObject)
+            {
+                _stack.Add(command);
+                OnStackModified();
+                _newCommandsARE.Set();
+            }
+        }
+
+        public Command[] WaitAndPopAll()
+        {
+            _newCommandsARE.WaitOne();
+            lock (_lockObject)
+            {
+                Command[] commands = _stack.ToArray();
+                _stack.Clear();
+                OnStackModified();
+                return commands;
+            }
+        }
+
+        private Command[] GetAll()
+        {
+            lock (_lockObject)
+                return _stack.ToArray();
+        }
+
+        public bool LoadCommandsToStack(string rawJson)
+        {
+            Command[] commands = Command.LoadCommands(rawJson);
+            PushAll(commands);
+            return commands.Length > 0;
         }
     }
 }

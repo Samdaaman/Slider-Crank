@@ -19,14 +19,23 @@ namespace conrod
     /// </summary>
     public partial class Decks : Window
     {
+        private readonly CommandStack _commandStack;
+        private readonly CrankService _crankService;
+        private readonly MixerService _mixerService;
         public Decks()
         {
+            _commandStack = new CommandStack();
+            _crankService = new CrankService(_commandStack);
+            _mixerService = new MixerService(_commandStack);
+            DataContext = new DecksDataContext(_commandStack, _crankService, _mixerService);
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ButtonInitialise_Click(object sender, RoutedEventArgs e)
         {
-            CrankService.Initialise();
+            _crankService.Initialise();
+            Task.Run(() => _crankService.AcceptNewCommandsForever());
+            Task.Run(() => _mixerService.ProcessNewCommandsForever());
         }
     }
 }

@@ -28,11 +28,12 @@ def send_bytes(data: bytes, sock: socket.SocketType):
 
 def main():
         sock = initialise()
-        send_bytes(DATA_ON, sock)
-        time.sleep(3)
-        send_bytes(DATA_OFF, sock)
-        time.sleep(5)
-        send_bytes(DATA_EOF, sock)
+        while True:
+            send_bytes(DATA_ON, sock)
+            time.sleep(1)
+            send_bytes(DATA_OFF, sock)
+            time.sleep(1)
+            # send_bytes(DATA_EOF, sock)
         sock.close()
 
 
