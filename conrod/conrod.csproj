@@ -63,7 +63,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DecksDataContext.cs" />
     <Compile Include="MixerService.cs" />
     <Compile Include="SetIfDifferentHelper.cs" />
   </ItemGroup>

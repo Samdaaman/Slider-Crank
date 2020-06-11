@@ -38,4 +38,19 @@ namespace conrod
             Task.Run(() => _mixerService.ProcessNewCommandsForever());
         }
     }
+
+    public class DecksDataContext
+    {
+        public CommandStack CurrentCommandStack;
+        public CrankService CurrentCrankService;
+        public MixerService CurrentMixerService;
+        public DecksDataContext(CommandStack commandStack, CrankService crankService, MixerService mixerService)
+        {
+            CurrentCommandStack = commandStack;
+            CurrentCrankService = crankService;
+            CurrentMixerService = mixerService;
+        }
+    }
 }
+
+
