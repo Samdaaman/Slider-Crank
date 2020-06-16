@@ -1,10 +1,15 @@
-const socket = new WebSocket("tcp://localhost:727");
+import axios from 'axios'
+
+const HOST = 'http://localhost:727/socket';
 
 interface Command {
-    name: string;
-    data: number;
+    location: string;
+    value: number;
 }
 
-export function sendCommand(command: Command): void {
-    socket.send(JSON.stringify(command));
+export async function sendCommand(command: Command): Promise<void> {
+    await axios.post(HOST, [{
+        location: command.location,
+        value: command.value
+    }]);
 }

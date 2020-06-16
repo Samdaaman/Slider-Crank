@@ -3,13 +3,13 @@ import ReactSwitch from 'react-switch';
 import {sendCommand} from "../modules/communcation";
 
 interface Props {
-    onSwitchChange?: (value: boolean) => void;
+    extraOnChange?: (value: boolean) => void;
     disabled?: boolean;
-    key: string;
+    commandKey: string;
     sendCommands?: boolean;
 }
 
-function Switch(props: Props) {
+function Switch(props: Props): JSX.Element {
     const [checked, setChecked] = useState(false);
     return <ReactSwitch
         checked={checked}
@@ -17,10 +17,10 @@ function Switch(props: Props) {
             setChecked(value);
             if (props.sendCommands ?? true)
                 sendCommand({
-                    name: props.key,
-                    data: checked ? 1 : 0
+                    location: props.commandKey,
+                    value: checked ? 1 : 0
                 });
-            props.onSwitchChange?.(value);
+            props.extraOnChange?.(value);
         }}
         disabled={props.disabled}
     />
