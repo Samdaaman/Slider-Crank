@@ -17,3 +17,5 @@ C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.csproj.CopyComplete
 C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\bin\Debug\CSCore.dll
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\bin\Debug\CSCore.xml
