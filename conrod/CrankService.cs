@@ -110,7 +110,14 @@ namespace conrod
         public void AcceptNewCommandsForever()
         {
             while (true)
-                AcceptNewCommands();
+                try
+                {
+                    AcceptNewCommands();
+                }
+                catch
+                {
+                    Console.WriteLine("Error accepting commands trying again");
+                }
         }
     }
 

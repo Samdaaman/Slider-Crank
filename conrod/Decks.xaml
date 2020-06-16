@@ -17,20 +17,40 @@
             </StatusBarItem>
         </StatusBar>
         <Button x:Name="ButtonInitialise" Content="Initialise" HorizontalAlignment="Left" Margin="34,24,0,0" VerticalAlignment="Top" Width="75" IsEnabled="{Binding CurrentCrankService.CanInitialise}" Click="ButtonInitialise_Click"/>
-        <ListView HorizontalAlignment="Left" Height="333" Margin="278,24,0,0" VerticalAlignment="Top" Width="488" ItemsSource="{Binding CurrentCommandStack.Stack}">
+        <ListView HorizontalAlignment="Left" Height="333" Margin="616,24,0,0" VerticalAlignment="Top" Width="150" ItemsSource="{Binding CurrentCommandStack.Stack}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn>
+                    <GridViewColumn Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Location}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn>
+                    <GridViewColumn Width="40">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Value}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ListView x:Name="ListViewSongSelect" HorizontalAlignment="Left" Height="283" Margin="34,74,0,0" VerticalAlignment="Top" Width="548" ItemsSource="{Binding CurrentLibraryService.LibraryItems}" SelectedIndex="{Binding CurrentLibraryService.SelectedIndex}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="300px">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Title}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="200px">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Artist}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

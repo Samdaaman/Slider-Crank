@@ -15,9 +15,9 @@ sock = None
 
 def initialise():
     global sock
-    if sock is not None:
-        sock.close()
     while True:
+        if sock is not None:
+            sock.close()
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.connect((HOST, PORT))
@@ -30,17 +30,18 @@ def initialise():
 @app.route('/socket', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def send_socket_data():
-    global sock
     if request.method == 'OPTIONS':
         return Response(status=200)
     else:
         while True:
             try:
+                l_sock = globals().get("sock", None)
                 data = bytes(request.data.decode('utf-8') + "\n", 'utf-8')
-                sock.send(data)
+                l_sock.send(data)
                 print(f'Successfully sent {data}')
                 return Response(status=200)
             except Exception as e:
+                print(f'Error {e}')
                 initialise()
 
 

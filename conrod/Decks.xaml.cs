@@ -23,12 +23,14 @@ namespace conrod
         public CommandStack CurrentCommandStack { get; } = new CommandStack();
         public CrankService CurrentCrankService { get; }
         public MixerService CurrentMixerService { get; }
+        public LibraryService CurrentLibraryService { get; }
 
         public Decks()
         {
             InitializeComponent();
             CurrentCrankService = new CrankService(CurrentCommandStack);
             CurrentMixerService = new MixerService(CurrentCommandStack);
+            CurrentLibraryService = CurrentMixerService.libraryService;
             DataContext = this;
         }
 

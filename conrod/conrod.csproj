@@ -68,6 +68,7 @@
     </Compile>
     <Compile Include="MixerService.cs" />
     <Compile Include="SetIfDifferentHelper.cs" />
+    <Compile Include="LibraryService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command.cs" />

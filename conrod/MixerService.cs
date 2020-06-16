@@ -9,9 +9,10 @@ using System.IO;
 
 namespace conrod
 {
-    public class MixerService: SetIfDifferentHelper
+    public class MixerService : SetIfDifferentHelper
     {
         private readonly CommandStack _commandStack;
+        public readonly LibraryService libraryService = new LibraryService();
         private bool _deckALoading = false;
         public bool DeckALoading { get => _deckALoading; private set => SetIfDifferent(ref _deckALoading, value); }
         private string _deckAFilename = null;
@@ -36,7 +37,7 @@ namespace conrod
         {
             while (true)
             {
-                Thread.Sleep(10000);
+                // Thread.Sleep(10000);
                 ProcessCommandsFromStack();
             }
         }
@@ -50,12 +51,14 @@ namespace conrod
 
         private void ProcessCommand(Command command)
         {
-            if (command.Location == "load")
-            {
-                string filename = Directory.GetFiles($"C:\\Users\\Sam\\Documents\\Coding\\Slider-Crank\\cylinder\\library\\")[command.Value];
-                Console.WriteLine($"Trying to load from {filename}");
-                DeckAFilename = filename;
-            }
-        }
+            if (command.Location == "ss-up")
+                if (libraryService.SelectedIndex > 0)
+                    libraryService.SelectedIndex--;
+            if (command.Location == "ss-down")
+                if (libraryService.SelectedIndex < libraryService.LibraryItems.Count - 1)
+                    libraryService.SelectedIndex++;
+            if (command.Location == "ss-select")
+                DeckAFilename = libraryService.LibraryItems[libraryService.SelectedIndex].Filepath;
+        } 
     }
 }

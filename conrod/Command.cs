@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,19 +19,32 @@ namespace conrod
 
         public static Command[] LoadCommands(string rawJson)
         {
-            Dictionary<string, int> jsonData = JsonConvert.DeserializeObject<Dictionary<string, int>>(rawJson);
+            // Console.WriteLine($"Parsing json {rawJson}");
+            if (rawJson == "")
+                return new Command[0];
             List<Command> commands = new List<Command>();
-            foreach (KeyValuePair<string, int> jsonCommand in jsonData)
+            try
             {
-                try
+                JArray jsonArray = JArray.Parse(rawJson);
+                foreach (JObject jsonItem in jsonArray)
                 {
-                    commands.Add(new Command(jsonCommand.Key, jsonCommand.Value));
-                }
-                catch
-                {
-                    Console.WriteLine($"Error adding command {jsonCommand.Key}:{jsonCommand.Value}");
+                    try
+                    {
+                        string location = jsonItem.Value<string>("location");
+                        int value = jsonItem.Value<int>("value");
+                        commands.Add(new Command(location, value));
+                    }
+                    catch
+                    {
+                        Console.WriteLine($"Error adding parsing command from array \"{jsonItem}\"");
+                    }
                 }
             }
+            catch
+            {
+                Console.WriteLine($"Error loading JSON array {rawJson}");
+            }
+            
             return commands.ToArray();
         }
     }
