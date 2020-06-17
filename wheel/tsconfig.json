@@ -23,7 +23,8 @@
     "experimentalDecorators": true,
     "noFallthroughCasesInSwitch": true,
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": true,
+    "noImplicitAny": true
   },
   "include": [
     "src/**/*"

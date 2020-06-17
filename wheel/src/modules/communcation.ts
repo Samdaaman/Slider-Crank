@@ -12,6 +12,6 @@ export async function sendCommand(command: Command): Promise<void> {
         await axios.post(HOST, `${command.location}:${command.value};\n`);
     }
     catch (error) {
-        alert(`Yeet2: ${error.toString()}`);
+        // alert(`Yeet2: ${error.toString()}`);
     }
 }

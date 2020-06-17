@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from "./Button";
+import Knob from "./Knob";
 
 interface Props {
     deckKey: string;
@@ -22,6 +23,12 @@ function Deck(props: Props): JSX.Element {
         <Button
             commandKey={`d-${props.deckKey}-sstop`}
             title={`${props.deckKey}-Stop`}
+        />
+        <Knob
+            commandKey={`d-${props.deckKey}-seekrb`}
+        />
+        <Knob
+            commandKey={`d-${props.deckKey}-seekrf`}
         />
     </div>
 

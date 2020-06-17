@@ -1,37 +1,91 @@
 declare module 'react-rotary-knob' {
-    import React from "react";
-    interface Props {
-        // default=0 Minimum value
-        min?: number;
-        // default=100 Maximum value
-        max?: number;
-        // default=0 Control Value
-        value?: number;
-        // default=0 start value for uncontrolled mode
-        defaultValue?: number;
-        // Callback with the updated value
-        onChange?: (value: number) => void;
-        // default=100 Minimum drag distance required to unlock the knob
-        unlockDistance?: number;
-        // default=1 the step distance (when using the keyboard arrows)
-        step?: number;
-        // Skin object
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        skin?: any;
-        // Called when the dragging starts
-        onStart?: () => void;
-        // Called when the dragging ends
-        onEnd?: () => void;
-        // default=0 degree value to move the starting point of the active area of the knob away from the center
-        clampMin?: number;
-        // default=360 degree value to move the end point of the active area of the knob away from the center
-        clampMax?: number;
-        // default=0 (zero is at top) degree value to rotate the knob component to have the starting / end points at a different position
-        rotateDegress?: number;
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    class ReactRotaryKnob extends React.Component<Props, any> {
+    /**
+     * Show the rotation circle and marker
+     * dispatches drag events
+     */
 
+    import { Component } from "react";
+    import type { Point } from "./Types";
+
+    /**
+     * type definition for the skin system attribute modification element
+     */
+    type AttributeSetValue = {
+        name: string,
+        value: (props: any, value: any) => string
+    };
+
+    /**
+     * Type definition for the skin element manipulation block
+     */
+    type UpdateElement = {
+        element: string,
+        content?: (props: any, value: any) => string,
+        attrs: Array<AttributeSetValue>
+    };
+    /**
+     * A skin consists of the svg code
+     * and the knob element centerx and y (knobX, knobY)
+     */
+    type Skin = {
+        svg: string,
+        knobX: number,
+        knobY: number,
+        updateAttributes: Array<UpdateElement>
+    };
+
+    type KnobProps = {
+        value?: number,
+        defaultValue?: number,
+        clampMin?: number,
+        clampMax?: number,
+        rotateDegrees?: number,
+        min?: number,
+        max?: number,
+        skin?: Skin,
+        format?: (val: number) => string,
+        onChange?: (val: number) => void,
+        onStart?: () => void,
+        onEnd?: () => void,
+        style?: any,
+        preciseMode?: boolean,
+        unlockDistance?: number,
+        step?: number
+    };
+
+    type KnobState = {
+        svgRef: any,
+        dragging: boolean,
+        dragDistance: number,
+        mousePos: Point,
+        valueAngle: number,
+        uncontrolledValue?: number
+    };
+
+    /**
+     * Generic knob component
+     */
+    class Knob extends Component<KnobProps, KnobState> {
+        container: any;
+        scale: any;
+        scaleProps: {min: number, max: number, clampMin: number, clampMax: number}
+        inputRef: any;
+        controlled: boolean;
+
+        state = {
+            svgRef: null,
+            dragging: false,
+            dragDistance: 0,
+            mousePos: { x: 0, y: 0 },
+            valueAngle: 0,
+            uncontrolledValue: 0
+        };
+
+
+
+        render: () => any
     }
-    export = ReactRotaryKnob;
+
+    export { Knob };
+
 }
