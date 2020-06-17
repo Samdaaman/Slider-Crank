@@ -32,13 +32,15 @@ namespace conrod
             CurrentMixerService = new MixerService(CurrentCommandStack);
             CurrentLibraryService = CurrentMixerService.libraryService;
             DataContext = this;
+
+            CurrentCrankService.Initialise();
+            CurrentCrankService.AcceptNewCommandsForever();
+            CurrentMixerService.ProcessNewCommandsForever();
         }
 
-        private void ButtonInitialise_Click(object sender, RoutedEventArgs e)
+        private void ListViewSongSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            CurrentCrankService.Initialise();
-            Task.Run(() => CurrentCrankService.AcceptNewCommandsForever());
-            Task.Run(() => CurrentMixerService.ProcessNewCommandsForever());
+            ListViewSongSelect.ScrollIntoView(ListViewSongSelect.SelectedItem);
         }
     }
 }

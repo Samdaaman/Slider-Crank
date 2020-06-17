@@ -16,7 +16,6 @@
                 <TextBlock Text="{Binding CurrentCrankService.CurrentStatus, Converter={StaticResource StatusTextConverter}}"/>
             </StatusBarItem>
         </StatusBar>
-        <Button x:Name="ButtonInitialise" Content="Initialise" HorizontalAlignment="Left" Margin="34,24,0,0" VerticalAlignment="Top" Width="75" IsEnabled="{Binding CurrentCrankService.CanInitialise}" Click="ButtonInitialise_Click"/>
         <ListView HorizontalAlignment="Left" Height="333" Margin="616,24,0,0" VerticalAlignment="Top" Width="150" ItemsSource="{Binding CurrentCommandStack.Stack}">
             <ListView.View>
                 <GridView>
@@ -37,7 +36,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <ListView x:Name="ListViewSongSelect" HorizontalAlignment="Left" Height="283" Margin="34,74,0,0" VerticalAlignment="Top" Width="548" ItemsSource="{Binding CurrentLibraryService.LibraryItems}" SelectedIndex="{Binding CurrentLibraryService.SelectedIndex}">
+        <ListView x:Name="ListViewSongSelect" HorizontalAlignment="Left" Height="333" Margin="34,24,0,0" VerticalAlignment="Top" Width="548" ItemsSource="{Binding CurrentLibraryService.LibraryItems}" SelectedIndex="{Binding CurrentLibraryService.SelectedIndex}" SelectionChanged="ListViewSongSelect_SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="300px">

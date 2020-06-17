@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
@@ -17,32 +16,35 @@ namespace conrod
             Console.WriteLine($"Loaded command {location}:{value}");
         }
 
-        public static Command[] LoadCommands(string rawJson)
+        public static Command[] LoadCommands(string rawData)
         {
-            // Console.WriteLine($"Parsing json {rawJson}");
-            if (rawJson == "")
+            if (rawData == "")
                 return new Command[0];
             List<Command> commands = new List<Command>();
             try
             {
-                JArray jsonArray = JArray.Parse(rawJson);
-                foreach (JObject jsonItem in jsonArray)
+                string[] rawCommands = rawData.Split(';');
+                foreach (string rawCommand in rawCommands)
                 {
                     try
                     {
-                        string location = jsonItem.Value<string>("location");
-                        int value = jsonItem.Value<int>("value");
-                        commands.Add(new Command(location, value));
+                        if (rawCommand != "\n")
+                        {
+                            string[] rawCommandParts = rawCommand.Split(':');
+                            string location = rawCommandParts[0];
+                            int value = int.Parse(rawCommandParts[1]);
+                            commands.Add(new Command(location, value));
+                        }
                     }
                     catch
                     {
-                        Console.WriteLine($"Error adding parsing command from array \"{jsonItem}\"");
+                        Console.WriteLine($"Error adding parsing command from array \"{rawCommand}\"");
                     }
                 }
             }
             catch
             {
-                Console.WriteLine($"Error loading JSON array {rawJson}");
+                Console.WriteLine($"Error loading data {rawData}");
             }
             
             return commands.ToArray();
@@ -104,9 +106,9 @@ namespace conrod
                 return _stack.ToArray();
         }
 
-        public bool LoadCommandsToStack(string rawJson)
+        public bool LoadCommandsToStack(string rawData)
         {
-            Command[] commands = Command.LoadCommands(rawJson);
+            Command[] commands = Command.LoadCommands(rawData);
             PushAll(commands);
             return commands.Length > 0;
         }

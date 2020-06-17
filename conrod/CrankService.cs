@@ -4,6 +4,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows.Data;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Media.Animation;
+using System.IO;
 
 namespace conrod
 {
@@ -17,7 +20,8 @@ namespace conrod
 
     public class CrankService: SetIfDifferentHelper
     {
-        const int PORT = 726;
+        const int PORT_SOCKET = 726;
+        const string PREFIX_WEB = "http://*:727/socket/";
         public enum Status
         {
             NotInitialised,
@@ -29,7 +33,7 @@ namespace conrod
         }
         private object _currentStatusLockObject = new object();
         private Status _currentStatus = Status.NotInitialised;
-        private readonly CommandStack _commandStack;
+        private readonly CommandStack commandStack;
         public Status CurrentStatus { get
             {
                 lock (_currentStatusLockObject)
@@ -42,43 +46,32 @@ namespace conrod
                 lock (_currentStatusLockObject)
                 {
                     SetIfDifferent<Status>(ref _currentStatus, value);
-                    NotifyPropertyChange("CanInitialise");
                 }
             }
         }
-        public bool CanInitialise { get => _currentStatus == Status.NotInitialised; }
-        private Socket Listener { get
-            {
-                if (_listener == null)
-                    throw new Exception("Socket has not been initialised yet");
-                return _listener;
-            }
-            set 
-            {
-                if (_listener != null)
-                    throw new Exception("Socket has already been initialised");
-                _listener = value;
-            }
-        }
-        private Socket _listener;
+        private Socket socketListener;
+        private HttpListener httpListener;
 
         public CrankService(CommandStack commandStack)
         {
-            _commandStack = commandStack;
+            this.commandStack = commandStack;
         }
 
         public void Initialise()
         {
-            Listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            Listener.Bind(new IPEndPoint(IPAddress.Loopback, PORT));
-            Listener.Listen(1);
+            socketListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            socketListener.Bind(new IPEndPoint(IPAddress.Loopback, PORT_SOCKET));
+            socketListener.Listen(1);
+            httpListener = new HttpListener();
+            httpListener.Prefixes.Add(PREFIX_WEB);
+            httpListener.Start();
             CurrentStatus = Status.Listening;
         }
 
-        private void AcceptNewCommands()
+        private void AcceptNewCommandsSocket()
         {
             CurrentStatus = Status.Accepting;
-            Socket handler = Listener.Accept();
+            Socket handler = socketListener.Accept();
             CurrentStatus = Status.InProgress;
             string data = "";
 
@@ -92,7 +85,7 @@ namespace conrod
                     string[] dataChunks = data.Split('\n');
                     for (int i = 0; i < dataChunks.Length - 1; i++)
                     {
-                        bool anyLoaded = _commandStack.LoadCommandsToStack(dataChunks[i]);
+                        bool anyLoaded = commandStack.LoadCommandsToStack(dataChunks[i]);
                         if (anyLoaded)
                             NotifyPropertyChange("CommandStackContent");
                     }
@@ -107,17 +100,35 @@ namespace conrod
             CurrentStatus = Status.ClosedAndListening;
         }
 
-        public void AcceptNewCommandsForever()
+        private void AcceptNewCommandsWeb()
         {
             while (true)
-                try
+            {
+                HttpListenerContext context = httpListener.GetContext();
+                HttpListenerRequest request = context.Request;
+                HttpListenerResponse response = context.Response;
+                response.AddHeader("Access-Control-Allow-Origin", "*");
+                if (request.HttpMethod == "OPTIONS")
                 {
-                    AcceptNewCommands();
+                    response.StatusCode = 200;
+                    response.OutputStream.Close();
                 }
-                catch
+                else if (request.HttpMethod == "POST")
                 {
-                    Console.WriteLine("Error accepting commands trying again");
+                    StreamReader reader = new StreamReader(request.InputStream);
+                    string data = reader.ReadToEnd();
+                    response.StatusCode = 200;
+                    response.OutputStream.Close();
+                    commandStack.LoadCommandsToStack(data);
                 }
+                
+            }
+        }
+
+        public void AcceptNewCommandsForever()
+        {
+            Task.Run(() => AcceptNewCommandsSocket());
+            Task.Run(() => AcceptNewCommandsWeb());
         }
     }
 

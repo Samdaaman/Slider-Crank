@@ -1,6 +1,7 @@
 import React from "react";
 import Switch from "../components/Switch";
 import Button from "../components/Button";
+import Deck from "../components/Deck";
 
 function DashboardPage(): JSX.Element {
 
@@ -16,10 +17,12 @@ function DashboardPage(): JSX.Element {
             commandKey={"ss-down"}
             title={'Down'}
         />
-        <Button
-            commandKey={"ss-select"}
-            title={'Select'}
-        />
+        <div style={{clear: "both"}}>
+            <Deck deckKey={"a"}/>
+        </div>
+        <div style={{clear: "both"}}>
+            <Deck deckKey={"b"}/>
+        </div>
     </div>
 }
 
