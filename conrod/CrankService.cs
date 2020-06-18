@@ -112,6 +112,7 @@ namespace conrod
                 {
                     response.StatusCode = 200;
                     response.OutputStream.Close();
+                    return;
                 }
                 else if (request.HttpMethod == "POST")
                 {

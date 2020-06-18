@@ -6,21 +6,29 @@ interface Props {
     extraOnChange?: (value: number) => void;
     commandKey: string;
     sendCommands?: boolean;
+    knobType: "seek" | "volume";
 }
 
 // https://github.com/hugozap/react-rotary-knob#api
 function Knob(props: Props): JSX.Element {
-    const [position, setPosition] = useState(0);
-    return <ReactRotaryKnob
+    const [position, setPosition] = useState(props.knobType == "volume" ? 50 : 0);
+    const max = props.knobType == "volume" ? 100 : 1000;
+    const clampMax = props.knobType == "volume" ? 270 : 360;
+    const rotateDegrees = props.knobType == "volume" ? -clampMax / 2 : 0;
+    return <div style={{float: "left"}}><ReactRotaryKnob
         value={position}
         unlockDistance={0}
-        max={1000}
+        max={max}
+        clampMax={clampMax}
+        rotateDegrees={rotateDegrees}
         onEnd={async() => {
-            await sendCommand({
-                location: props.commandKey,
-                value: -1
-            });
-            setPosition(0);
+            if (props.knobType == "seek") {
+                await sendCommand({
+                    location: props.commandKey,
+                    value: -1
+                });
+                setPosition(0);
+            }
         }}
         onChange={async(value: number) => {
             setPosition(value);
@@ -32,7 +40,7 @@ function Knob(props: Props): JSX.Element {
             }
             props.extraOnChange?.(value);
         }}
-    />
+    /></div>
 
 
 }

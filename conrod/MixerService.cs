@@ -87,6 +87,24 @@ namespace conrod
                         case "sstop":
                             deck.Stop();
                             break;
+                        case "seekrb":
+                            deck.RelativeSeekValueChange(command.Value, false);
+                            break;
+                        case "seekrf":
+                            deck.RelativeSeekValueChange(command.Value, true);
+                            break;
+                        case "volume":
+                            deck.VolumeAdjust(command.Value);
+                            break;
+                        case "treble":
+                            deck.TrebleAdjust(command.Value);
+                            break;
+                        case "mid":
+                            deck.MidAdjust(command.Value);
+                            break;
+                        case "bass":
+                            deck.BassAdjust(command.Value);
+                            break;
                         default:
                             Console.WriteLine($"Could not process location {command.Location}");
                             break;

@@ -25,10 +25,28 @@ function Deck(props: Props): JSX.Element {
             title={`${props.deckKey}-Stop`}
         />
         <Knob
+            knobType={"seek"}
             commandKey={`d-${props.deckKey}-seekrb`}
         />
         <Knob
+            knobType={"seek"}
             commandKey={`d-${props.deckKey}-seekrf`}
+        />
+        <Knob
+            knobType={"volume"}
+            commandKey={`d-${props.deckKey}-volume`}
+        />
+        <Knob
+            knobType={"volume"}
+            commandKey={`d-${props.deckKey}-bass`}
+        />
+        <Knob
+            knobType={"volume"}
+            commandKey={`d-${props.deckKey}-mid`}
+        />
+        <Knob
+            knobType={"volume"}
+            commandKey={`d-${props.deckKey}-treble`}
         />
     </div>
 
