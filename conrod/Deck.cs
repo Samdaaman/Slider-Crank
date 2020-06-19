@@ -1,15 +1,13 @@
-﻿using CSCore;
-using CSCore.Codecs;
-using CSCore.SoundOut;
-using CSCore.Streams.Effects;
-using CSCore.Streams;
+﻿using NAudio.Wave;
 using System;
+using soundtouch;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using csharp_example;
 
 namespace conrod
 {
@@ -27,8 +25,9 @@ namespace conrod
         private string _filename = null;
         private State _state = State.Empty;
 
-        private DirectSoundOut soundOut = null;
-        private Equalizer equalizer = null;
+        private SoundProcessor soundOut = new SoundProcessor();
+        private float _baseBPM = 0f;
+        private float _relativeBPM = 0f;
         private int seekValueBigPrevious = 0;
         private int seekValueFinePrevious = 0;
         private int treblePercentage = 50;
@@ -37,42 +36,33 @@ namespace conrod
         
         public State CurrentState { get => _state; set => SetIfDifferent(ref _state, value); }
         public string Filename { get => _filename; private set => SetIfDifferent(ref _filename, value); }
-
+        public float RelativeBPM { get => _relativeBPM; set => SetIfDifferent(ref _relativeBPM, value); }
+        public float BaseBPM { get => _baseBPM; set => SetIfDifferent(ref _baseBPM, value); }
 
         public void LoadFromFile(string filename)
         {
             CurrentState = State.Loading;
-            IWaveSource waveSource = CodecFactory.Instance.GetCodec(filename);
-            equalizer?.Dispose();
-            soundOut?.Dispose();
-            soundOut = new DirectSoundOut(latency: 50);
-            equalizer = Equalizer.Create10BandEqualizer(waveSource.ToSampleSource());
-            soundOut.Initialize(equalizer.ToWaveSource());
-            soundOut.Volume = 0.5f;
+            BaseBPM = soundOut.OpenWaveFile(filename);
+            if (BaseBPM == 0f)
+                throw new Exception("Loading audio file didn't work as BPM is 0");
+            RelativeBPM = BaseBPM;
+            // soundOut.streamProcessor.st.Volume = 0.5f;
             Filename = filename;
             CurrentState = State.Loaded;
         }
         public void Play()
         {
-            if (CurrentState == State.Loaded && (soundOut.PlaybackState == PlaybackState.Paused || soundOut.PlaybackState == PlaybackState.Stopped))
-                soundOut.Play();
+           soundOut.Play();
         }
         public void Pause()
         {
-            if (CurrentState == State.Loaded && (soundOut.PlaybackState == PlaybackState.Playing))
-                soundOut.Pause();
+            soundOut.Pause();
         }
         public void Stop()
         {
-            if (CurrentState == State.Loaded && soundOut != null)
-            {
-                soundOut.Dispose();
-                soundOut = null;
-                Filename = null;
-                CurrentState = State.Empty;
-            }
+            soundOut.Stop();
         }
-        private void relativeSeekWithPrevious(ref int previousSeekValue, int newSeekValue, int scaleFactor)
+        private void RelativeSeekWithPrevious(ref int previousSeekValue, int newSeekValue, int scaleFactor)
         {
             if (newSeekValue == -1)
             {
@@ -85,30 +75,23 @@ namespace conrod
                 while (previousSeekValue - newSeekValue < -500)
                     newSeekValue += 1000;
                 int seekChange = newSeekValue - previousSeekValue;
-                long scaledChange = Convert.ToInt64(Math.Round((decimal)seekChange * soundOut.WaveSource.WaveFormat.BytesPerSecond * 2 / scaleFactor) / 2);
-                if (scaledChange != 0)
-                {
-                    Console.WriteLine(scaledChange);
-                    previousSeekValue = newSeekValue;
-                    soundOut.WaveSource.Position += Math.Max(-soundOut.WaveSource.Position, scaledChange);
-                }
-                else
-                    Console.WriteLine("Current seek change would be zero");
+                previousSeekValue = newSeekValue;
+                soundOut.RelativeSeek(seekChange, scaleFactor);
             }
         }
         public void RelativeSeekValueChange(int seekValue, bool fine)
         {
-            if (soundOut?.PlaybackState == PlaybackState.Paused || soundOut?.PlaybackState == PlaybackState.Playing)
+            if (CurrentState == State.Loaded)
             {
                 if (fine)
-                    relativeSeekWithPrevious(ref seekValueFinePrevious, seekValue, SEEK_SCALE_FINE);
+                    RelativeSeekWithPrevious(ref seekValueFinePrevious, seekValue, SEEK_SCALE_FINE);
                 else
-                    relativeSeekWithPrevious(ref seekValueBigPrevious, seekValue, SEEK_SCALE_NORMAL);
+                    RelativeSeekWithPrevious(ref seekValueBigPrevious, seekValue, SEEK_SCALE_NORMAL);
             }
         }
         public void VolumeAdjust(int percentage)
         {
-            soundOut.Volume = percentage / 100f;
+            soundOut.SetVolume(percentage / 100f);
         }
         public void TrebleAdjust(int percentage)
         {
@@ -146,9 +129,15 @@ namespace conrod
 
                 for (int i = 0; i < gains.Length; i++)
                 {
-                    equalizer.SampleFilters[i].AverageGainDB = (gains[i] - 100) / 3;
+                    // equalizer.SampleFilters[i].AverageGainDB = (gains[i] - 100) / 3;
                 }
             }
+        }
+        public void TempoAdjust(int percentage)
+        {
+            float tempoFactor = (percentage + 50) / 100f;
+            RelativeBPM = BaseBPM * tempoFactor;
+            soundOut.SetTempo(tempoFactor);
         }
     }
 }

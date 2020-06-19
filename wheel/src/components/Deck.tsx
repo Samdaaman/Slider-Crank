@@ -48,6 +48,10 @@ function Deck(props: Props): JSX.Element {
             knobType={"volume"}
             commandKey={`d-${props.deckKey}-treble`}
         />
+        <Knob
+            knobType={"volume"}
+            commandKey={`d-${props.deckKey}-tempo`}
+        />
     </div>
 
 
