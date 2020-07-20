@@ -1,0 +1,6 @@
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\x64\Debug\conrod.csprojAssemblyReference.cache
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\x64\Debug\Decks.g.cs
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\x64\Debug\App.g.cs
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\x64\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\x64\Debug\conrod_MarkupCompile.cache
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\x64\Debug\conrod_MarkupCompile.lref

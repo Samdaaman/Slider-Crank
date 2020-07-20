@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:conrod"
         x:Class="conrod.Decks"
         mc:Ignorable="d"
-        Title="Decks" Height="450" Width="800" d:DataContext="{d:DesignInstance {x:Type local:Decks}}">
+        Title="Decks" Height="704" Width="800" d:DataContext="{d:DesignInstance {x:Type local:Decks}}">
     <Window.Resources>
         <local:StatusTextConverter x:Key="StatusTextConverter"/>
     </Window.Resources>
@@ -56,6 +56,9 @@
                 </GridView>
             </ListView.View>
         </ListView>
-
+        <Label Content="{Binding CurrentMixerService.DeckA.RelativeBPM}" HorizontalAlignment="Left" Margin="107,441,0,0" VerticalAlignment="Top"/>
+        <Label Content="{Binding CurrentMixerService.DeckA.BaseBPM}" HorizontalAlignment="Left" Margin="258,441,0,0" VerticalAlignment="Top"/>
+        <Label Content="{Binding CurrentMixerService.DeckB.RelativeBPM}" HorizontalAlignment="Left" Margin="107,506,0,0" VerticalAlignment="Top"/>
+        <Label Content="{Binding CurrentMixerService.DeckB.BaseBPM}" HorizontalAlignment="Left" Margin="258,506,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

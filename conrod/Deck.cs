@@ -24,8 +24,8 @@ namespace conrod
         }
         private string _filename = null;
         private State _state = State.Empty;
-
-        private SoundProcessor soundOut = new SoundProcessor();
+        private Equaliser equaliser = new Equaliser();
+        private SoundProcessor soundOut = null;
         private float _baseBPM = 0f;
         private float _relativeBPM = 0f;
         private int seekValueBigPrevious = 0;
@@ -41,10 +41,10 @@ namespace conrod
 
         public void LoadFromFile(string filename)
         {
+            if (soundOut == null)
+                soundOut = new SoundProcessor(equaliser);
             CurrentState = State.Loading;
-            BaseBPM = soundOut.OpenWaveFile(filename);
-            if (BaseBPM == 0f)
-                throw new Exception("Loading audio file didn't work as BPM is 0");
+            soundOut.OpenWaveFile(filename);
             RelativeBPM = BaseBPM;
             // soundOut.streamProcessor.st.Volume = 0.5f;
             Filename = filename;
@@ -91,22 +91,30 @@ namespace conrod
         }
         public void VolumeAdjust(int percentage)
         {
-            soundOut.SetVolume(percentage / 100f);
+            equaliser.Volume = percentage / 100f;
         }
         public void TrebleAdjust(int percentage)
         {
-            treblePercentage = percentage;
-            EquilizerUpdate();
+            //treblePercentage = percentage;
+            //EquilizerUpdate();
+            equaliser.highBand.Gain = PercentageToDB(percentage);
         }
         public void MidAdjust(int percentage)
         {
-            midPercentage = percentage;
-            EquilizerUpdate();
+            equaliser.midBand.Gain = PercentageToDB(percentage);
+            //midPercentage = percentage;
+            //EquilizerUpdate();
         }
         public void BassAdjust(int percentage)
         {
-            bassPercentage = percentage;
-            EquilizerUpdate();
+            equaliser.lowBand.Gain = PercentageToDB(percentage);
+            //bassPercentage = percentage;
+            //EquilizerUpdate();
+        }
+
+        private float PercentageToDB(int percentage)
+        {
+            return (percentage / 100f - 1) * 40f;
         }
         private void EquilizerUpdate()
         {

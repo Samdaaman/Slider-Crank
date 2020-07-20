@@ -1,8 +1,4 @@
-﻿using CSCore;
-using CSCore.Codecs;
-using CSCore.SoundOut;
-using CSCore.Streams;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
@@ -104,6 +100,9 @@ namespace conrod
                             break;
                         case "bass":
                             deck.BassAdjust(command.Value);
+                            break;
+                        case "tempo":
+                            deck.TempoAdjust(command.Value);
                             break;
                         default:
                             Console.WriteLine($"Could not process location {command.Location}");

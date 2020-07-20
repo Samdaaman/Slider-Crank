@@ -15,5 +15,5 @@ C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.exe
 C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.pdb
 C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\conrod.csproj.CopyComplete
 C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\obj\Debug\GeneratedInternalTypeHelper.g.cs
-C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\bin\Debug\CSCore.dll
-C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\bin\Debug\CSCore.xml
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\bin\Debug\NAudio.dll
+C:\Users\Sam\Documents\Coding\Slider-Crank\conrod\bin\Debug\NAudio.xml
